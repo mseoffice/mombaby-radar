@@ -1,14 +1,20 @@
 package com.mombaby.radar.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
  * 内容表（34.2.2）。
  * content 状态机（34.2.6）：
- *   generating → pending_review → approved → published → archived
- *   pending_review → rejected → generating
+ *   GENERATING → PENDING_REVIEW → APPROVED → PUBLISHED → ARCHIVED
+ *   PENDING_REVIEW → REJECTED → GENERATING
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "content")
 public class Content {
@@ -20,18 +26,15 @@ public class Content {
     @Column(name = "product_id")
     private Long productId;
 
-    /**
-     * 状态枚举（34.2.6）：
-     * GENERATING, PENDING_REVIEW, APPROVED, PUBLISHED, REJECTED, ARCHIVED
-     */
     @Column(name = "status", length = 20, nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status;
 
     @Column(name = "platform", length = 20)
     private String platform;           // 小红书/抖音/微博/公众号/微信群
 
     @Lob
-    @Column(name = "body")
+    @Column(name = "body", columnDefinition = "TEXT")
     private String body;
 
     @Column(name = "title", length = 200)
@@ -45,4 +48,24 @@ public class Content {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    /**
+     * 状态流转校验。返回 true 表示允许从当前状态迁移到目标状态。
+     */
+    public boolean canTransitionTo(ContentStatus target) {
+        return this.status != null && this.status.canTransitionTo(target);
+    }
+
+    /**
+     * 执行状态流转（含校验）。
+     * @throws IllegalStateException 非法流转
+     */
+    public void transitionTo(ContentStatus target) {
+        if (!canTransitionTo(target)) {
+            throw new IllegalStateException(
+                "非法的 content 状态流转: " + this.status + " → " + target);
+        }
+        this.status = target;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

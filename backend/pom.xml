@@ -63,11 +63,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
-    <!--
-      AI（二选一，待 D2 / 技术负责人确认）：
-      LangChain4j：dev.langchain4j:langchain4j-spring-boot-starter
-      Spring AI  ：org.springframework.ai:spring-ai-openai-spring-boot-starter
-    -->
+    <!-- Spring AI（已选定，Mock 模式；真实 API Key 就绪后切换） -->
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+      <version>1.0.0-M4</version>
+    </dependency>
   </dependencies>
 
   <build>

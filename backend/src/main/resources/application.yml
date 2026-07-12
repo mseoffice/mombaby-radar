@@ -22,7 +22,13 @@ spring:
     password: ${RABBITMQ_PASS:-radar_mq_2026}
     listener:
       simple:
-        acknowledge-mode: manual
+        acknowledge-mode: auto
+  # Agent 队列/交换机（第 9 章 Agent 编排）
+  queues:
+    agent-task:
+      name: agent.task.queue
+      exchange: agent.task.exchange
+      routing-key: agent.task
   elasticsearch:
     uris:
       - https://localhost:9200
@@ -45,8 +51,18 @@ jwt:
 
 ai:
   openai:
-    api-key: ${OPENAI_API_KEY:-}        # D2 多平台；当前占位
+    api-key: ${OPENAI_API_KEY:-mock-key}      # Mock 模式；真实 Key 就绪后替换
     base-url: https://api.openai.com/v1
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:-mock-key}
+      chat:
+        enabled: true
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
   # 百度 / 阿里 等按 D2 方案接入
 
 logging:

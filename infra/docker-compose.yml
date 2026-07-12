@@ -1,0 +1,77 @@
+# 母婴雷达 AI 本地基础设施
+# 启动：docker compose -f infra/docker-compose.yml up -d
+# 注：Elasticsearch 本地需内核参数 vm.max_map_count>=262144
+#   macOS/Linux: sudo sysctl -w vm.max_map_count=262144
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: radar-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-radar_root_2026}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mombaby_radar}
+      MYSQL_USER: ${MYSQL_USER:-radar}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-radar_pwd_2026}
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: radar-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-radar}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-radar_mq_2026}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: radar-es
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: radar-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-radar_minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-radar_minio_2026}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  mysql_data:
+  rabbitmq_data:
+  es_data:
+  minio_data:

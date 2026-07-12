@@ -41,13 +41,17 @@ public class ContentController {
     }
 
     @PostMapping("/{id}/approve")
-    public ResponseEntity<Content> approve(@PathVariable Long id) {
-        return ResponseEntity.ok(contentService.approve(id));
+    public ResponseEntity<Content> approve(@PathVariable Long id,
+                                           @RequestParam Long reviewerId,
+                                           @RequestParam(required = false, defaultValue = "") String opinion) {
+        return ResponseEntity.ok(contentService.approve(id, reviewerId, opinion));
     }
 
     @PostMapping("/{id}/reject")
-    public ResponseEntity<Content> reject(@PathVariable Long id) {
-        return ResponseEntity.ok(contentService.reject(id));
+    public ResponseEntity<Content> reject(@PathVariable Long id,
+                                          @RequestParam Long reviewerId,
+                                          @RequestParam(required = false, defaultValue = "") String opinion) {
+        return ResponseEntity.ok(contentService.reject(id, reviewerId, opinion));
     }
 
     @PostMapping("/{id}/regenerate")

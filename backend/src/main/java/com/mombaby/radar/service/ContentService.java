@@ -1,8 +1,10 @@
 package com.mombaby.radar.service;
 
 import com.mombaby.radar.entity.Content;
+import com.mombaby.radar.entity.ContentReviewLog;
 import com.mombaby.radar.entity.ContentStatus;
 import com.mombaby.radar.repository.ContentRepository;
+import com.mombaby.radar.repository.ContentReviewLogRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,12 @@ import java.util.Optional;
 public class ContentService {
 
     private final ContentRepository contentRepository;
+    private final ContentReviewLogRepository reviewLogRepository;
 
-    public ContentService(ContentRepository contentRepository) {
+    public ContentService(ContentRepository contentRepository,
+                          ContentReviewLogRepository reviewLogRepository) {
         this.contentRepository = contentRepository;
+        this.reviewLogRepository = reviewLogRepository;
     }
 
     public Page<Content> list(Pageable pageable) {
@@ -34,18 +39,22 @@ public class ContentService {
         return contentRepository.save(content);
     }
 
-    /** 人工通过：PENDING_REVIEW → APPROVED */
-    public Content approve(Long id) {
+    /** 人工通过：PENDING_REVIEW → APPROVED，写入审核日志 */
+    public Content approve(Long id, Long reviewerId, String opinion) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.APPROVED);
-        return contentRepository.save(c);
+        Content saved = contentRepository.save(c);
+        writeReviewLog(id, reviewerId, "approved", opinion);
+        return saved;
     }
 
-    /** 人工驳回：PENDING_REVIEW → REJECTED */
-    public Content reject(Long id) {
+    /** 人工驳回：PENDING_REVIEW → REJECTED，写入审核日志 */
+    public Content reject(Long id, Long reviewerId, String opinion) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.REJECTED);
-        return contentRepository.save(c);
+        Content saved = contentRepository.save(c);
+        writeReviewLog(id, reviewerId, "rejected", opinion);
+        return saved;
     }
 
     /** 重新生成：REJECTED → GENERATING */
@@ -72,5 +81,15 @@ public class ContentService {
     private Content getOrThrow(Long id) {
         return contentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("内容不存在: " + id));
+    }
+
+    private void writeReviewLog(Long contentId, Long reviewerId, String action, String opinion) {
+        ContentReviewLog log = new ContentReviewLog();
+        log.setContentId(contentId);
+        log.setReviewerId(reviewerId);
+        log.setAction(action);
+        log.setOpinion(opinion);
+        log.setCreatedAt(LocalDateTime.now());
+        reviewLogRepository.save(log);
     }
 }

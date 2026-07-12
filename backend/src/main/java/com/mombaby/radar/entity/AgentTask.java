@@ -1,12 +1,18 @@
 package com.mombaby.radar.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
  * Agent 任务表（34.2.3）。
- * 建议补充状态（草案）：pending → running → success / failed / partial
+ * 状态：pending → running → success / failed / partial
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "agent_task")
 public class AgentTask {

@@ -64,11 +64,17 @@ public class ContentService {
         return contentRepository.save(c);
     }
 
-    /** 标记已发布：APPROVED → PUBLISHED */
+    /** 标记已发布：APPROVED → PUBLISHED，标注 AI 生成 */
     public Content publish(Long id) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.PUBLISHED);
+        c.setAiGenerated(true);     // 合规：AI 生成内容标识（附录C/附录B）
         return contentRepository.save(c);
+    }
+
+    /** 判断内容是否可发布（仅 APPROVED 可发布） */
+    public boolean canPublish(Long id) {
+        return getOrThrow(id).getStatus() == ContentStatus.APPROVED;
     }
 
     /** 下线/归档：PUBLISHED → ARCHIVED */

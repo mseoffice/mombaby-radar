@@ -64,6 +64,17 @@ public class ContentController {
         return ResponseEntity.ok(contentService.publish(id));
     }
 
+    @GetMapping("/{id}/publish-status")
+    public ResponseEntity<java.util.Map<String, Object>> publishStatus(@PathVariable Long id) {
+        boolean canPublish = contentService.canPublish(id);
+        Content c = contentService.getById(id).orElse(null);
+        return ResponseEntity.ok(java.util.Map.of(
+            "canPublish", canPublish,
+            "status", c != null ? c.getStatus().name() : "UNKNOWN",
+            "aiGenerated", c != null && c.getAiGenerated() != null && c.getAiGenerated()
+        ));
+    }
+
     @PostMapping("/generate")
     public ResponseEntity<ContentGenerateResponse> generate(@RequestBody ContentGenerateRequest request) {
         return ResponseEntity.ok(contentGenerateService.generate(request));

@@ -49,6 +49,9 @@ public class Content {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "ai_generated")
+    private Boolean aiGenerated = false;   // 合规：AI 生成内容标识（附录C/附录B）
+
     /**
      * 状态流转校验。返回 true 表示允许从当前状态迁移到目标状态。
      */

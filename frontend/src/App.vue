@@ -9,6 +9,7 @@
       <router-link to="/products">商品中心</router-link>
       <router-link to="/content-factory">内容工厂</router-link>
       <router-link to="/ai-ops">AI 运营中心</router-link>
+      <router-link to="/comment-inbox">评论收件箱</router-link>
       <router-link to="/private-ops">私域运营</router-link>
       <router-link to="/analytics">数据中心</router-link>
       <div class="user-bar">

@@ -20,7 +20,7 @@ public class AuthController {
         String username = body.get("username");
         String password = body.get("password");
         return authService.login(username, password)
-                .map(ResponseEntity::ok)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(401).body(Map.of("error", "用户名或密码错误")));
     }
 
@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> body) {
         String token = body.get("token");
         return authService.refresh(token)
-                .map(ResponseEntity::ok)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(401).body(Map.of("error", "Token 无效或已过期")));
     }
 }

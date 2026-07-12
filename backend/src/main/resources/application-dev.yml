@@ -1,0 +1,7 @@
+# 开发期 profile（默认激活）：启用 Mock ChatModel，不依赖任何外部 LLM Key。
+# 测试/预发期用 SPRING_PROFILES_ACTIVE=prod + DEEPSEEK_API_KEY 切真实 DeepSeek 调用。
+spring:
+  ai:
+    openai:
+      chat:
+        enabled: false     # 关闭自动配置的 OpenAiChatModel，改由 AiConfig 的 Mock ChatModel（@Profile("dev")）接管

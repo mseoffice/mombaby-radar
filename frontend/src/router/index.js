@@ -7,6 +7,7 @@ const routes = [
   { path: '/products',       name: 'Products',       component: () => import('../views/Products.vue'),       meta: { requiresAuth: true } },
   { path: '/content-factory',name: 'ContentFactory', component: () => import('../views/ContentFactory.vue'), meta: { requiresAuth: true } },
   { path: '/ai-ops',         name: 'AiOps',          component: () => import('../views/AiOps.vue'),          meta: { requiresAuth: true } },
+  { path: '/comment-inbox',  name: 'CommentInbox',   component: () => import('../views/CommentInbox.vue'),    meta: { requiresAuth: true } },
   { path: '/private-ops',    name: 'PrivateOps',     component: () => import('../views/PrivateOps.vue'),     meta: { requiresAuth: true } },
   { path: '/analytics',      name: 'Analytics',      component: () => import('../views/Analytics.vue'),      meta: { requiresAuth: true } },
 ]

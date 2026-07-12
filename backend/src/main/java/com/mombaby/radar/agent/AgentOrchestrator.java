@@ -16,15 +16,16 @@ public class AgentOrchestrator {
     private static final Logger log = LoggerFactory.getLogger(AgentOrchestrator.class);
     private final Map<String, AgentHandler> handlers;
 
-    public AgentOrchestrator(ContentGenerateAgent contentGenerateAgent) {
-        // 注册 Agent 处理器（M2 先注册内容生成，后续 Agent 逐步接入）
+    public AgentOrchestrator(ContentGenerateAgent contentGenerateAgent,
+                              CommentReplyAgent commentReplyAgent) {
+        // 注册 Agent 处理器（M2 注册内容生成；M3 接入评论分析/回复）
         this.handlers = Map.of(
-            "content-generate", contentGenerateAgent
-            // "hot-product", hotProductAgent,       // M3
-            // "comment-reply", commentReplyAgent,    // M3
-            // "image-generate", imageGenerateAgent,  // M3
-            // "wechat-group", wechatGroupAgent,      // M3
-            // "analytics", analyticsAgent            // M3
+            "content-generate", contentGenerateAgent,
+            "comment-reply", commentReplyAgent
+            // "hot-product", hotProductAgent,       // M3 后续
+            // "image-generate", imageGenerateAgent,  // M3 后续
+            // "wechat-group", wechatGroupAgent,      // M3 后续（#15 已裁）
+            // "analytics", analyticsAgent            // M3 后续
         );
     }
 

@@ -29,9 +29,9 @@
 
 | Issue # | 标题 | 门控 | wb-issues |
 |---|---|---|---|
-| [#13](https://github.com/mseoffice/mombaby-radar/issues/13) | platform-gateway — 多平台 API 接入（D2）🚫 | D2 方案 | rHcFjC |
-| [#14](https://github.com/mseoffice/mombaby-radar/issues/14) | comment-ops — 评论分析 + 回复（D3）🚫 | **D3 采集方式** | rhnHiO |
-| [#15](https://github.com/mseoffice/mombaby-radar/issues/15) | group-push — 群推送计划 + 效果记录 | D2 | rhnHiO |
+| [#13](https://github.com/mseoffice/mombaby-radar/issues/13) | platform-gateway — 多平台 API 接入（D2 ✅ 已闭环） | D2 方案（DeepSeek 为主 + 开发 Mock / 测试真实 API 分层） | rHcFjC |
+| [#14](https://github.com/mseoffice/mombaby-radar/issues/14) | comment-ops — 评论分析 + 回复（D3 ✅ 已闭环） | **D3 采集方式（手动粘贴为主 + 平台 API 可选）** | rhnHiO |
+| [#15](https://github.com/mseoffice/mombaby-radar/issues/15) | group-push — 群推送计划 + 效果记录（⏸ deferred） | 38.3 范围减法，降非核心/延后至 M4 或 V1.1 | rhnHiO |
 | [#16](https://github.com/mseoffice/mombaby-radar/issues/16) | analytics — 数据中心 | T1.1/T1.2 | r6HUar |
 | [#17](https://github.com/mseoffice/mombaby-radar/issues/17) | dashboard — 6 卡片 + 待办 + 趋势 + AI 建议 | T1.1/T1.2 | rP8vVZ |
 
@@ -46,6 +46,6 @@
 
 ## 硬门控（🚫 = blocked）
 
-- **D3** 采集方式（rhnHiO）→ 解之前，`#14 comment-ops` 不得 start
-- **D2** 多平台方案（rHcFjC）→ 解之前，`#13 platform-gateway` 不得 start
-- **38.3** 排期/范围（rIwCRO）→ 决定 M3 是否裁 `#15 group-push` / 图片生成
+- **D3** 采集方式（rhnHiO）→ ✅ 已闭环：**手动粘贴录入为主 + 平台 API 自动采集为可选项**（Collector 抽象预留）。`#14 comment-ops` 可 start。
+- **D2** 多平台方案（rHcFjC）→ ✅ 已闭环：**以 DeepSeek 为主 LLM，开发期 Mock / 测试期真实 API（环境分层）**。`#13 platform-gateway` 可 start。
+- **38.3** 排期/范围（rIwCRO）→ ✅ 已决策：M3 **裁 #15 group-push**（降非核心/延后）；范围减法缓解无 buffer 风险。

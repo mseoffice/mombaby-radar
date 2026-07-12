@@ -4,6 +4,8 @@ server:
     context-path: /api
 
 spring:
+  profiles:
+    active: dev      # 默认开发期：Mock ChatModel（不依赖外部 Key）。测试期用 SPRING_PROFILES_ACTIVE=prod + DEEPSEEK_API_KEY 切真实 API
   datasource:
     url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE:-mombaby_radar}?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Shanghai
     username: ${MYSQL_USER:-radar}
@@ -23,12 +25,6 @@ spring:
     listener:
       simple:
         acknowledge-mode: auto
-  # Agent 队列/交换机（第 9 章 Agent 编排）
-  queues:
-    agent-task:
-      name: agent.task.queue
-      exchange: agent.task.exchange
-      routing-key: agent.task
   elasticsearch:
     uris:
       - https://localhost:9200
@@ -38,6 +34,17 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  # Spring AI（D2 落地）：DeepSeek 兼容 OpenAI 协议
+  ai:
+    openai:
+      # DeepSeek 兼容端点（生产主选 LLM）
+      base-url: https://api.deepseek.com/v1
+      api-key: ${DEEPSEEK_API_KEY:-mock-key}     # 测试期填真实 Key；开发期 mock-key 由 Mock ChatModel 接管
+      chat:
+        enabled: true                            # dev profile 会覆盖为 false
+        options:
+          model: deepseek-chat                   # DeepSeek 主模型
+          temperature: 0.7
 
 minio:
   endpoint: ${MINIO_ENDPOINT:-http://localhost:9000}
@@ -50,20 +57,7 @@ jwt:
   expiration-ms: 7200000     # 2h，35.2 章
 
 ai:
-  openai:
-    api-key: ${OPENAI_API_KEY:-mock-key}      # Mock 模式；真实 Key 就绪后替换
-    base-url: https://api.openai.com/v1
-
-spring:
-  ai:
-    openai:
-      api-key: ${OPENAI_API_KEY:-mock-key}
-      chat:
-        enabled: true
-        options:
-          model: gpt-4o-mini
-          temperature: 0.7
-  # 百度 / 阿里 等按 D2 方案接入
+  provider: deepseek         # 生产主选 LLM：deepseek / openai / mock（mock 仅开发期，由 dev profile 启用）
 
 logging:
   level:

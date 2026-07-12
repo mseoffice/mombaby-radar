@@ -10,7 +10,7 @@
 |---|---|
 | 前端 | Vue 3 + Vite |
 | 后端 | Spring Boot 3.x + MySQL 8 |
-| AI | LangChain4j + Spring AI（OpenAI / 百度 / 阿里），RabbitMQ 事件编排 |
+| AI | Spring AI（**DeepSeek 为主 LLM**；开发期 Mock / 测试期真实 API 环境分层）+ RabbitMQ 事件编排 |
 | 检索 | Elasticsearch 8 |
 | 存储 | MinIO（对象，图片/内容资产） |
 | 认证 | JWT（Token 2h 可刷新，第 35.2 章） |
@@ -20,7 +20,7 @@
 ```
 mombaby-radar/
 ├── frontend/        # Vue3 SPA（Vite）
-├── backend/         # Spring Boot（5 服务：商品/内容/Agent/运营/数据）
+├── backend/         # Spring Boot 单体单模块（V1.0 单体；5 服务边界以 package 形式存在，后续按需拆分）
 ├── infra/          # docker-compose（MySQL / RabbitMQ / ES / MinIO）
 ├── docs/           # 设计文档索引
 ├── TASKS.md         # 9 条事项 → GitHub Issues / 里程碑 映射
@@ -28,6 +28,8 @@ mombaby-radar/
 ```
 
 ## 服务拆分（第 7.3 章，均 P0）
+
+> V1.0 落地为**单体单模块**（假设 A5，≤50 人），下列服务边界在单体中以 package 形式存在；后续按需拆分为独立服务。
 
 | 服务 | 职责 | 技术 |
 |---|---|---|

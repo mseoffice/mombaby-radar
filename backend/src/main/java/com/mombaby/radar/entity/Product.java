@@ -1,6 +1,9 @@
 package com.mombaby.radar.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -8,6 +11,9 @@ import java.time.LocalDateTime;
  * 商品表（34.2.1）。
  * A7 约束：无 tenant_id（单团队内部工具）。
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product {
@@ -45,6 +51,4 @@ public class Product {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    // ===== 省略 getter/setter（Lombok 可选）=====
 }

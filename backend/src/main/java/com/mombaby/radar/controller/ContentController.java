@@ -1,6 +1,9 @@
 package com.mombaby.radar.controller;
 
+import com.mombaby.radar.dto.ContentGenerateRequest;
+import com.mombaby.radar.dto.ContentGenerateResponse;
 import com.mombaby.radar.entity.Content;
+import com.mombaby.radar.service.ContentGenerateService;
 import com.mombaby.radar.service.ContentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class ContentController {
 
     private final ContentService contentService;
+    private final ContentGenerateService contentGenerateService;
 
-    public ContentController(ContentService contentService) {
+    public ContentController(ContentService contentService,
+                             ContentGenerateService contentGenerateService) {
         this.contentService = contentService;
+        this.contentGenerateService = contentGenerateService;
     }
 
     @GetMapping
@@ -52,6 +58,11 @@ public class ContentController {
     @PostMapping("/{id}/publish")
     public ResponseEntity<Content> publish(@PathVariable Long id) {
         return ResponseEntity.ok(contentService.publish(id));
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<ContentGenerateResponse> generate(@RequestBody ContentGenerateRequest request) {
+        return ResponseEntity.ok(contentGenerateService.generate(request));
     }
 
     @PostMapping("/{id}/archive")

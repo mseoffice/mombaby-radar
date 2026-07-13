@@ -10,6 +10,8 @@ spring:
     url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE:-mombaby_radar}?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Shanghai
     username: ${MYSQL_USER:-radar}
     password: ${MYSQL_PASSWORD:-radar_pwd_2026}
+    hikari:
+      maximum-pool-size: 25   # 50 并发下默认 10 偏小（#18 压测调优）
   jpa:
     hibernate:
       ddl-auto: update      # 研发期；上线前改为 validate + 版本化迁移
@@ -27,7 +29,7 @@ spring:
         acknowledge-mode: auto
   elasticsearch:
     uris:
-      - https://localhost:9200
+      - http://localhost:9200   # docker-compose ES 为 http（xpack.security.enabled=false）
     username: ${ES_USER:-elastic}
     password: ${ES_PASSWORD:-changeme}
   servlet:
@@ -53,11 +55,18 @@ minio:
   bucket: ${MINIO_BUCKET:-mombaby-radar}
 
 jwt:
-  secret: ${JWT_SECRET:-change-me-radar-32bytes-min-secret}
+  secret: ${JWT_SECRET:-change-me-radar-32bytes-min-secret}  # ⚠️ 生产必须用 JWT_SECRET 环境变量覆盖
   expiration-ms: 7200000     # 2h，35.2 章
 
 ai:
   provider: deepseek         # 生产主选 LLM：deepseek / openai / mock（mock 仅开发期，由 dev profile 启用）
+
+# Actuator / Metrics 暴露（#18 压测采集）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
 
 logging:
   level:

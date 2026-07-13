@@ -39,10 +39,12 @@
 
 | Issue # | 标题 | wb-issues |
 |---|---|---|
-| [#18](https://github.com/mseoffice/mombaby-radar/issues/18) | perf-baseline — 性能压测 | r6HUar |
-| [#19](https://github.com/mseoffice/mombaby-radar/issues/19) | compliance — 合规落地 | resjs4 |
-| [#20](https://github.com/mseoffice/mombaby-radar/issues/20) | e2e-smoke — 验收标准端到端冒烟 | rP8vVZ |
-| [#21](https://github.com/mseoffice/mombaby-radar/issues/21) | release-v1.0 — 上线清单 + tag | rIwCRO |
+| [#18](https://github.com/mseoffice/mombaby-radar/issues/18) | perf-baseline — 性能压测 ✅ | r6HUar |
+| [#19](https://github.com/mseoffice/mombaby-radar/issues/19) | compliance — 合规落地 ✅ | resjs4 |
+| [#20](https://github.com/mseoffice/mombaby-radar/issues/20) | e2e-smoke — 验收标准端到端冒烟 ✅ | rP8vVZ |
+| [#21](https://github.com/mseoffice/mombaby-radar/issues/21) | release-v1.0 — 上线清单 + tag ✅ | rIwCRO |
+
+## 全部里程碑完成 ✅（M1–M4，21/21 Issues 关闭）
 
 ## 硬门控（🚫 = blocked）
 

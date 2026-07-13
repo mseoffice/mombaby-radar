@@ -2,6 +2,7 @@ package com.mombaby.radar.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mombaby.radar.aop.AuditLog;
 import com.mombaby.radar.collector.Collector;
 import com.mombaby.radar.collector.ManualPasteCollector;
 import com.mombaby.radar.collector.PlatformApiCollector;
@@ -68,6 +69,8 @@ public class CommentService {
         if (c.getRawText() == null || c.getRawText().isBlank()) {
             throw new IllegalArgumentException("评论文本不能为空");
         }
+        // 合规：录入时自动脱敏（PII 保护，35.2/附录C）
+        c.setRawText(com.mombaby.radar.common.Desensitizer.comment(c.getRawText()));
         return commentRepository.save(c);
     }
 
@@ -86,6 +89,7 @@ public class CommentService {
     /**
      * 分析评论：分类/情绪/意图 + 生成 2–3 条回复方案。SLA ≤5s（34 章）。
      */
+    @AuditLog(action = "comment.analyze", target = "comment")
     public Comment analyze(Long id) {
         Comment c = getOrThrow(id);
         if (!c.canTransitionTo(CommentStatus.ANALYZED)) {
@@ -117,6 +121,7 @@ public class CommentService {
     }
 
     /** 选定某条回复（标记已回复） */
+    @AuditLog(action = "comment.reply", target = "comment")
     public Comment reply(Long id, String replyText) {
         Comment c = getOrThrow(id);
         if (!c.canTransitionTo(CommentStatus.REPLIED)) {

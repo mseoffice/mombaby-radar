@@ -1,5 +1,6 @@
 package com.mombaby.radar.service;
 
+import com.mombaby.radar.aop.AuditLog;
 import com.mombaby.radar.entity.Content;
 import com.mombaby.radar.entity.ContentReviewLog;
 import com.mombaby.radar.entity.ContentStatus;
@@ -40,6 +41,7 @@ public class ContentService {
     }
 
     /** 人工通过：PENDING_REVIEW → APPROVED，写入审核日志 */
+    @AuditLog(action = "content.approve", target = "content")
     public Content approve(Long id, Long reviewerId, String opinion) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.APPROVED);
@@ -49,6 +51,7 @@ public class ContentService {
     }
 
     /** 人工驳回：PENDING_REVIEW → REJECTED，写入审核日志 */
+    @AuditLog(action = "content.reject", target = "content")
     public Content reject(Long id, Long reviewerId, String opinion) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.REJECTED);
@@ -65,6 +68,7 @@ public class ContentService {
     }
 
     /** 标记已发布：APPROVED → PUBLISHED，标注 AI 生成 */
+    @AuditLog(action = "content.publish", target = "content")
     public Content publish(Long id) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.PUBLISHED);
@@ -78,6 +82,7 @@ public class ContentService {
     }
 
     /** 下线/归档：PUBLISHED → ARCHIVED */
+    @AuditLog(action = "content.archive", target = "content")
     public Content archive(Long id) {
         Content c = getOrThrow(id);
         c.transitionTo(ContentStatus.ARCHIVED);

@@ -13,7 +13,7 @@ import java.util.Collections;
 /**
  * JWT 认证过滤器（35.2）。
  * 从 Authorization: Bearer <token> 中提取 Token，校验后注入 SecurityContext。
- * 放行路径：/api/auth/login, /api/auth/refresh
+ * 放行路径：/auth/**（context-path /api 下实际 URI 为 /api/auth/**）
  */
 public class JwtAuthFilter extends OncePerRequestFilter {
 

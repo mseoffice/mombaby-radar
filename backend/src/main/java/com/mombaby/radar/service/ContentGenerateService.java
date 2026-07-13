@@ -83,6 +83,7 @@ public class ContentGenerateService {
                 content.setTitle(parts[0]);
                 content.setBody(parts[1]);
                 content.setHashtags(parts[2]);
+                content.setAiGenerated(true);      // 合规：AI 生成内容在生成即标注（附录C/35.2）
                 content.setCreatedAt(LocalDateTime.now());
                 content.setUpdatedAt(LocalDateTime.now());
                 content = contentRepository.save(content);
